@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Home Feed</h3>
+{% for post in posts %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h5>{{ post.title }} - by {{ post.user.full_name }}</h5>
+        <p>{{ post.description }}</p>
+        {% if post.file_name %}
+        <a href="{{ url_for('static', filename='uploads/' + post.file_name) }}" target="_blank">📎 Download File</a>
+        {% endif %}
+        <small class="text-muted">{{ post.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+    </div>
+</div>
+{% else %}
+<p>No new posts from friends.</p>
+{% endfor %}
+{% endblock %}

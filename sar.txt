@@ -1,0 +1,22 @@
+facebook 2 account :- Shankar Bhilara , sarang bhole (delete karne ahe)
+instagram: 
+sarang 8080133259 : disabled by instagram due to some reason
+    baba
+    mummy
+    email
+
+contacts delete 
+Fampay
+
+
+
+
+ <!-- 
+            {% if current_user.id == user.id %}
+                user_posts = Post.query.filter_by(user_id=current_user.id).all()
+
+            {% endif %}
+           
+            {% for posts in (post.skills or '').split(',') %}
+            <span class="skill-badge">{{ skill.strip() }}</span>
+            {% endfor %}-->

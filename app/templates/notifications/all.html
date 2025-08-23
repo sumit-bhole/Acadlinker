@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>🔔 Notifications</h3>
+{% if notifications %}
+<ul class="list-group">
+    {% for n in notifications %}
+    <li class="list-group-item {% if not n.is_read %}fw-bold{% endif %}">
+        <a href="{{ n.link }}">{{ n.message }}</a><br>
+        <small class="text-muted">{{ n.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No new notifications.</p>
+{% endif %}
+{% endblock %}

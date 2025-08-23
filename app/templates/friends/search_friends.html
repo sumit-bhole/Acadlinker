@@ -1,0 +1,30 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="search-container">
+    <h2>🔍 Find Friends by Skill</h2>
+
+    <form method="get" class="search-form">
+        <input type="text" name="q" placeholder="e.g. Python, ML, Java" value="{{ query }}">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if results %}
+    <div class="results-header">Showing results for "<strong>{{ query }}</strong>"</div>
+    <div class="results-list">
+        {% for user in results %}
+        <div class="user-card">
+            <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" class="avatar">
+            <div class="user-info">
+                <a href="{{ url_for('profile.view', user_id=user.id) }}" class="name">{{ user.full_name }}</a>
+                <div class="skills">Skills: {{ user.skills or 'Not specified' }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% elif query %}
+    <p class="no-results">No matching users found for "{{ query }}".</p>
+    {% endif %}
+</div>
+{% endblock %}

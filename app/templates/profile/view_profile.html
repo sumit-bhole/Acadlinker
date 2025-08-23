@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="profile-container position-relative">
+
+    <!-- Only show Edit Profile button if current user is viewing their own profile -->
+    {% if current_user.id == user.id %}
+    <a class="btn btn-outline-primary edit-btn" href="{{ url_for('profile.edit') }}">
+        ✏️ Edit Profile
+    </a>
+    {% endif %}
+
+    <!-- Cover Photo -->
+    <div class="cover-photo">
+        <img src="{{ url_for('static', filename='uploads/' + user.cover_photo) }}" alt="Cover Photo">
+    </div>
+
+    <!-- Profile Section -->
+    <div class="profile-main d-flex align-items-start flex-wrap">
+        <div class="profile-img-wrapper">
+            <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Profile Photo"
+                class="profile-pic">
+        </div>
+
+        <div class="profile-details ms-4 w-100">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <h2 class="profile-name mb-0">{{ user.full_name }}</h2>
+
+                <!-- Show "Send Friend Request" if it's another user's profile -->
+        {% if current_user.id != user.id %}
+        {% set is_friend = current_user.friends|selectattr("id", "equalto", user.id)|list|length > 0 %}
+        {% set request_sent = user.received_requests|selectattr("sender_id", "equalto", current_user.id)|list|length > 0 %}
+        {% set request_received = current_user.received_requests | selectattr("sender_id", "equalto", user.id) | list | length > 0 %}
+
+        {% if is_friend %}
+        <a href="{{ url_for('messages.chat', user_id=user.id) }}" class="btn btn-success">💬 Message</a>
+        
+        {% elif request_sent or request_received %}
+        <button class="btn btn-secondary" disabled>✅ Requested</button>
+        
+        {% else %}
+        <form action="{{ url_for('friends.send_request', user_id=user.id) }}" method="post">
+            <button class="btn btn-primary" type="submit">➕ Send Friend Request</button>
+        </form>
+        {% endif %}
+        {% endif %}
+
+            </div>
+
+            <p class="text-muted">{{ user.location }}</p>
+            <p class="bio">{{ user.description }}</p>
+
+            <div class="contact-info mt-3">
+                <p><strong>📧 Email:</strong> {{ user.email }}</p>
+                <p><strong>📱 Mobile:</strong> {{ user.mobile_no }}</p>
+                <p><strong>🎓 Education:</strong> {{ user.education }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skills Section -->
+    <div class="skills-section mt-4">
+        <h5 class="mb-2">Skills</h5>
+        <div class="skills-list">
+            {% for skill in (user.skills or '').split(',') %}
+            <span class="skill-badge">{{ skill.strip() }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Posts Section -->
+            <h3>My Posts</h3>
+            {% for post in user_posts %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5>{{ post.title }}</h5>
+                    <p>{{ post.description }}</p>
+
+
+                    {% if post.file_name %}
+                    {% set ext = post.file_name.split('.')[-1].lower() %}
+                    {% if ext in ['jpg', 'jpeg', 'png', 'gif'] %}
+                    <a href="{{ url_for('static', filename='uploads/' + post.file_name) }}" target="_blank">
+                        <img src="{{ url_for('static', filename='uploads/' + post.file_name) }}" alt="Uploaded Image"
+                            style="max-width: 100px; max-height: 100px; display: block; margin-top: 5px;">
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('static', filename='uploads/' + post.file_name) }}" target="_blank">
+                        📎 Download File
+                    </a>
+                    {% endif %}
+                    {% endif %}
+
+
+                    <small class="text-muted">{{ post.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+                </div>
+            </div>
+            {% else %}
+            <p>No posts yet.</p>
+            {% endfor %}
+
+</div>
+{% endblock %}

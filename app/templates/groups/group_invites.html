@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Group Invites</h3>
+{% for i in invites %}
+<div>
+    Group: {{ i.group.title }}
+    <a href="{{ url_for('groups.accept_invite', invite_id=i.id) }}">Accept</a> |
+    <a href="{{ url_for('groups.reject_invite', invite_id=i.id) }}">Reject</a>
+</div>
+{% else %}
+<p>No pending invites.</p>
+{% endfor %}
+{% endblock %}

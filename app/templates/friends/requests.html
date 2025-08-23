@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Friend Requests</h2>
+{% for req in requests %}
+<div>
+    <strong>{{ req.sender.full_name }}</strong>
+    <a href="{{ url_for('friends.accept', req_id=req.id) }}">Accept</a> |
+    <a href="{{ url_for('friends.reject', req_id=req.id) }}">Reject</a>
+</div>
+{% else %}
+<p>No pending requests.</p>
+{% endfor %}
+{% endblock %}

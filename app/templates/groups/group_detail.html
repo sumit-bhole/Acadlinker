@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>{{ group.title }}</h3>
+<p>{{ group.description }}</p>
+<h5>Members:</h5>
+<ul>
+    {% for member in group.members %}
+    <li>{{ member.full_name }}</li>
+    {% endfor %}
+</ul>
+
+<h5>Invite a Friend:</h5>
+<ul>
+    {% for f in current_user.friends %}
+    {% if f not in group.members %}
+    <li>
+        {{ f.full_name }} -
+        <a href="{{ url_for('groups.invite', group_id=group.id, user_id=f.id) }}">Invite</a>
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
+{% endblock %}

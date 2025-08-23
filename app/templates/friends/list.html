@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-3">Your Friends</h2>
+
+<div class="card-list">
+    {% for friend in friends %}
+    <div class="card mb-2 p-2 d-flex flex-row align-items-center">
+        <img src="{{ url_for('static', filename='uploads/' + friend.profile_pic) }}" class="rounded-circle me-3"
+            width="50" height="50">
+        <div class="flex-grow-1">
+            <a href="{{ url_for('profile.view', user_id=friend.id) }}" class="fw-bold">{{ friend.full_name }}</a><br>
+            <span class="text-muted">{{ friend.skills }}</span>
+        </div>
+        <a class="btn btn-outline-primary btn-sm" href="{{ url_for('messages.chat', user_id=friend.id) }}">💬 Chat</a>
+    </div>
+    {% else %}
+    <p class="text-muted">You haven't added any friends yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}
