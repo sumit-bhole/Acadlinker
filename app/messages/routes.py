@@ -52,4 +52,10 @@ def chat(user_id):
         ((Message.sender_id == friend.id) & (Message.receiver_id == current_user.id))
     ).order_by(Message.timestamp.asc()).all()
 
-    return render_template('messages/chat.html', form=form, friend=friend, messages=msgs)
+    # <<< FIX 1: ADD THIS LINE to get all of the current user's friends.
+    all_friends = current_user.friends.all()
+
+
+    
+    # <<< FIX 2: MODIFY THIS LINE to pass the 'friends' list to the template.
+    return render_template('messages/chat.html', form=form, friend=friend, messages=msgs, friends=all_friends)

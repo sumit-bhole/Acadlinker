@@ -1,280 +1,184 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block page_container %}
 <style>
-   body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden; /* Prevent body scroll */
-}
-
-.chat-container-instagram {
-    display: flex;
-    position: fixed;
-    top: 60px; /* Your navbar height */
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: calc(100vh - 60px); /* Adjust height below navbar */
-    overflow: hidden;
-}
-
-    /* Sidebar */
-    .sidebar-instagram {
-        width: 25%;
-        background: #fafafa;
-        border-right: 1px solid #ddd;
-        display: flex;
-        flex-direction: column;
-        overflow-y: auto;
+    body {
+        overflow-y: hidden;
     }
 
-    .sidebar-header {
-        padding: 16px;
-        border-bottom: 1px solid #ddd;
+    #file-preview-container {
+        display: none;
     }
 
-    .sidebar-title {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .sidebar-title h3 {
-        margin: 0;
-    }
-
-    .chat-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        overflow-y: auto;
-    }
-
-    .chat-item {
-        padding: 12px 16px;
-        display: flex;
-        align-items: center;
-        transition: background 0.2s ease;
-        overflow-y: auto;
-        flex: 1;
-    }
-
-    .chat-item.active,
-    .chat-item:hover {
-        background: #eaeaea;
-    }
-
-    .avatar-img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
+    #file-preview-thumbnail {
+        max-height: 50px;
+        max-width: 50px;
+        border-radius: 4px;
         object-fit: cover;
-        margin-right: 10px;
-    }
-
-    .chat-name {
-        font-weight: 500;
-        color: #000;
-    }
-
-    /* Chat Box */
-    .chat-box-instagram {
-        width: 75%;
-        display: flex;
-        flex-direction: column;
-        background: #ffffff;
-    }
-
-    .chat-header {
-        display: flex;
-        align-items: center;
-        padding: 16px;
-        border-bottom: 1px solid #eee;
-        background: #fafafa;
-        position: sticky;
-        top: 0;
-        z-index: 1;
-    }
-
-    .chat-header .avatar-img {
-        margin-right: 12px;
-    }
-
-    /* Messages */
-    .messages {
-        flex: 1;
-        overflow-y: auto;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        background: #ffffff;
-        overflow-y: auto;
-        flex: 1;
-    }
-
-    .message-bubble {
-        max-width: 70%;
-        padding: 10px 14px;
-        border-radius: 18px;
-        font-size: 14px;
-        word-wrap: break-word;
-        background: #f0f0f0;
-        color: #000000;
-    }
-
-    .message-bubble.sent {
-        align-self: flex-end;
-        background: #d2f8cf;
-    }
-
-    .message-bubble.received {
-        align-self: flex-start;
-    }
-
-    .timestamp {
-        font-size: 10px;
-        color: #999;
-        margin-top: 4px;
-        text-align: right;
-    }
-
-    /* Message Form */
-    .message-form {
-        padding: 12px 16px;
-        border-top: 1px solid #ddd;
-        background: #fafafa;
-    }
-
-    .input-area {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .message-input {
-        flex: 1;
-        border: 1px solid #ccc;
-        border-radius: 20px;
-        padding: 10px 15px;
-        resize: none;
-        outline: none;
-        background: #f0f0f0;
-        color: #000000;
-    }
-
-    .file-upload {
-        font-size: 14px;
-    }
-
-    .send-button {
-        background: #3897f0;
-        color: #fff;
-        border: none;
-        padding: 10px 14px;
-        border-radius: 50%;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-
-    .send-button:hover {
-        background: #2874d0;
-    }
-
-    /* Scrollbars */
-    .messages::-webkit-scrollbar,
-    .chat-list::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .messages::-webkit-scrollbar-thumb,
-    .chat-list::-webkit-scrollbar-thumb {
-        background: #ccc;
-        border-radius: 10px;
-    }
-
-    /* Responsive */
-    @media screen and (max-width: 768px) {
-        .chat-container-instagram {
-            flex-direction: column;
-        }
-
-        .sidebar-instagram {
-            width: 100%;
-            height: 30%;
-        }
-
-        .chat-box-instagram {
-            width: 100%;
-            height: 70%;
-        }
-
-        .chat-header {
-            flex-wrap: wrap;
-        }
     }
 </style>
 
-<div class="chat-container-instagram">
-    <!-- Sidebar -->
-    <aside class="sidebar-instagram">
-        <div class="sidebar-header">
-            <div class="sidebar-title">
-                <h3>Messages</h3>
+<div class="d-flex flex-column" style="height: calc(100vh - 56px);">
+    <div class="row g-0 flex-grow-1" style="min-height: 0;">
+
+        <div class="col-lg-4 col-xl-3 h-100 border-end p-0">
+            <div class="d-flex flex-column h-100">
+                <div class="p-3 border-bottom">
+                    <h3 class="mb-0">Messages</h3>
+                </div>
+                <ul class="nav nav-tabs nav-fill p-2" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#friends-panel"
+                            type="button" role="tab">Friends</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#groups-panel" type="button"
+                            role="tab">Groups</button>
+                    </li>
+                </ul>
+                <div class="tab-content flex-grow-1" style="overflow-y: auto; min-height: 0;">
+                    <div class="tab-pane fade show active" id="friends-panel" role="tabpanel">
+                        <div class="list-group list-group-flush">
+                            {% for f in friends %}
+                            <a href="{{ url_for('messages.chat', user_id=f.id) }}"
+                                class="list-group-item list-group-item-action p-3 {% if friend and f.id == friend.id %}active{% endif %}">
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ url_for('static', filename='uploads/' + (f.profile_pic or 'default_avatar.png')) }}"
+                                        class="rounded-circle me-3" alt="{{ f.full_name }}" width="45" height="45">
+                                    <div class="fw-bold">{{ f.full_name }}</div>
+                                </div>
+                            </a>
+                            {% else %}
+                            <div class="p-3 text-center text-muted">
+                                <p>Your friend list is empty.</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="groups-panel" role="tabpanel">
+                        <div class="p-3 text-center text-muted">
+                            <p>Group chats will appear here.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <ul class="chat-list">
-            {% for f in friends %}
-            <li class="chat-item {% if f.id == friend.id %}active{% endif %}">
-                <a href="{{ url_for('messages.chat', user_id=f.id) }}">
-                    <img src="{{ url_for('static', filename='profile_images/' + (f.profile_image or 'default.png')) }}"
-                        class="avatar-img" alt="Avatar">
-                    <div class="chat-name">{{ f.full_name }}</div>
-                </a>
-            </li>
-            {% endfor %}
-        </ul>
-    </aside>
 
-    <!-- Chat Box -->
-    <main class="chat-box-instagram">
-        <div class="chat-header">
-            <img src="{{ url_for('static', filename='profile_images/' + (friend.profile_image or 'default.png')) }}"
-                class="avatar-img" alt="Avatar">
-            <h4>{{ friend.full_name }}</h4>
-        </div>
-
-        <div class="messages" id="chat-messages">
-            {% for m in messages %}
-            <div class="message-bubble {{ 'sent' if m.sender_id == current_user.id else 'received' }}">
-                {% if m.content %}
-                <p class="message-text">{{ m.content }}</p>
-                {% endif %}
-                {% if m.file_name %}
-                <p><a class="file-link" href="{{ url_for('static', filename='uploads/' + m.file_name) }}"
-                        target="_blank">📎 {{ m.file_name }}</a></p>
-                {% endif %}
-                <span class="timestamp">{{ m.timestamp.strftime('%H:%M') }}</span>
+        <div class="col-lg-8 col-xl-9 d-flex flex-column h-100">
+            {% if friend %}
+            <div class="d-flex align-items-center p-3 border-bottom bg-light flex-shrink-0">
+                <img src="{{ url_for('static', filename='uploads/' + (friend.profile_pic or 'default_avatar.png')) }}"
+                    class="rounded-circle me-3" alt="{{ friend.full_name }}" width="45" height="45">
+                <h5 class="mb-0 fw-bold">{{ friend.full_name }}</h5>
             </div>
-            {% endfor %}
-        </div>
 
-        <form class="message-form" method="POST" enctype="multipart/form-data">
-            {{ form.hidden_tag() }}
-            <div class="input-area">
-                <textarea name="content" rows="1" class="message-input" placeholder="Message..."></textarea>
-                {{ form.file(class="file-upload") }}
-                <button class="send-button" type="submit">➤</button>
+            <div id="chat-messages" class="p-3 p-md-4 flex-grow-1" style="overflow-y: auto;">
+                <div class="d-flex flex-column gap-3">
+                    {% for m in messages %}
+                    <div
+                        class="d-flex {% if m.sender_id == current_user.id %}justify-content-end{% else %}justify-content-start{% endif %} align-items-end">
+                        <div class="{% if m.sender_id == current_user.id %}bg-primary text-white{% else %}bg-light{% endif %} p-2 px-3 rounded-4"
+                            style="max-width: 70%;">
+                            {% if m.file_name %}
+                            {% set ext = m.file_name.split('.')[-1]|lower %}
+                            {% if ext in ['jpg', 'jpeg', 'png', 'gif'] %}
+                            <a href="{{ url_for('static', filename='uploads/' + m.file_name) }}" target="_blank">
+                                <img src="{{ url_for('static', filename='uploads/' + m.file_name) }}" alt="attachment"
+                                    class="img-fluid rounded mb-2" style="max-height: 200px;">
+                            </a>
+                            {% else %}
+                            <a href="{{ url_for('static', filename='uploads/' + m.file_name) }}" target="_blank"
+                                class="d-block mb-2 text-white text-decoration-underline">
+                                <i class="fas fa-paperclip me-2"></i>{{ m.file_name }}
+                            </a>
+                            {% endif %}
+                            {% endif %}
+                            {% if m.content %}<p class="mb-1" style="white-space: pre-wrap;">{{ m.content }}</p>{% endif
+                            %}
+                            <small
+                                class="{% if m.sender_id == current_user.id %}opacity-75{% else %}text-muted{% endif %} d-block text-end">{{
+                                m.timestamp.strftime('%I:%M %p') }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
-        </form>
-    </main>
+
+            <div class="p-3 border-top bg-light flex-shrink-0">
+                <div id="file-preview-container"
+                    class="alert alert-light p-2 d-flex align-items-center justify-content-between">
+                    <div>
+                        <img id="file-preview-thumbnail" src="#" alt="preview" class="me-2">
+                        <span id="file-preview-name" class="small"></span>
+                    </div>
+                    <button id="remove-file-btn" type="button" class="btn-close"></button>
+                </div>
+                <form id="message-form" method="POST" enctype="multipart/form-data" class="d-flex gap-2">
+                    {{ form.hidden_tag() }}
+                    {{ form.content(id="message-content", class="form-control", rows="1", placeholder="Type a
+                    message...", style="resize: none;") }}
+                    <label for="file-upload" class="btn btn-light mb-0 d-flex align-items-center"><i
+                            class="fas fa-paperclip"></i></label>
+                    {{ form.file(id="file-upload", class="d-none") }}
+                    {{ form.submit(id="send-button", class="btn btn-primary", value="➤") }}
+                </form>
+            </div>
+
+            {% else %}
+            <div class="d-flex h-100 align-items-center justify-content-center text-center text-muted">
+                <div><i class="fas fa-comments fa-4x mb-3"></i>
+                    <h4>Select a conversation</h4>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
 
 <script>
-    // Auto-scroll to latest message
     const chatMessages = document.getElementById('chat-messages');
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    const messageForm = document.getElementById('message-form');
+    const messageContent = document.getElementById('message-content');
+    const fileUpload = document.getElementById('file-upload');
+    const sendButton = document.getElementById('send-button');
+    const previewContainer = document.getElementById('file-preview-container');
+    const previewThumbnail = document.getElementById('file-preview-thumbnail');
+    const previewName = document.getElementById('file-preview-name');
+    const removeFileBtn = document.getElementById('remove-file-btn');
+    if (chatMessages) { chatMessages.scrollTop = chatMessages.scrollHeight; }
+    function toggleSendButton() {
+        const hasText = messageContent.value.trim().length > 0;
+        const hasFile = fileUpload.files.length > 0;
+        sendButton.disabled = !hasText && !hasFile;
+    }
+    messageContent.addEventListener('input', toggleSendButton);
+    fileUpload.addEventListener('change', function () {
+        if (fileUpload.files.length > 0) {
+            const file = fileUpload.files[0];
+            previewName.textContent = file.name;
+            const isImage = file.type.startsWith('image/');
+            if (isImage) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewThumbnail.src = e.target.result;
+                    previewThumbnail.style.display = 'inline-block';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                previewThumbnail.style.display = 'none';
+            }
+            previewContainer.style.display = 'flex';
+        }
+        toggleSendButton();
+    });
+    removeFileBtn.addEventListener('click', function () {
+        fileUpload.value = '';
+        previewContainer.style.display = 'none';
+        toggleSendButton();
+    });
+    toggleSendButton();
 </script>
-{% endblock %}
+
+{% endblock page_container %}
+
+{% block footer %}{% endblock %}
